@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Create PAR & Approval Request</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Department Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.department.id_for_label }}" class="form-label">Department</label>
+                            <select class="form-control" name="{{ form.department.name }}" id="{{ form.department.id_for_label }}">
+                                {% for choice in form.department.field.choices %}
+                                    <option value="{{ choice.0 }}" {% if choice.0 == form.department.value %}selected{% endif %}>{{ choice.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Item Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.item.id_for_label }}" class="form-label">Item</label>
+                            <input type="text" class="form-control" name="{{ form.item.name }}" id="{{ form.item.id_for_label }}" value="{{ form.item.value|default:'' }}">
+                        </div>
+
+                        <!-- Quantity Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.quantity.id_for_label }}" class="form-label">Quantity</label>
+                            <input type="number" class="form-control" name="{{ form.quantity.name }}" id="{{ form.quantity.id_for_label }}" value="{{ form.quantity.value|default:'' }}">
+                        </div>
+
+                 
+
+                        <!-- Category Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.category.id_for_label }}" class="form-label">Category</label>
+                            <select class="form-control" name="{{ form.category.name }}" id="{{ form.category.id_for_label }}">
+                                {% for choice in form.category.field.choices %}
+                                    <option value="{{ choice.0 }}" {% if choice.0 == form.category.value %}selected{% endif %}>{{ choice.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Unit Price Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.unite_price.id_for_label }}" class="form-label">Unit Price</label>
+                            <input type="number" class="form-control" name="{{ form.unite_price.name }}" id="{{ form.unite_price.id_for_label }}" value="{{ form.unite_price.value|default:'' }}">
+                        </div>
+
+                        <!-- Chosen Date Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.chosen_date.id_for_label }}" class="form-label">Chosen Date</label>
+                            <input type="date" class="form-control" name="{{ form.chosen_date.name }}" id="{{ form.chosen_date.id_for_label }}" value="{{ form.chosen_date.value|default:'' }}">
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

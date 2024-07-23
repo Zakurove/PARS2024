@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+{% block title %} User Pars {% endblock %}
+
+{% block content %}
+
+{% load static %}
+<head>
+    <link rel="stylesheet" href="{% static 'dashboard.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.3.1/fabric.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib@1.4.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<script>
+    axios.defaults.xsrfCookieName = 'csrftoken';
+    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+</script>
+
+<body>
+   <input type="checkbox" id="menu-toggle">
+    <div class="sidebar">
+        <div class="side-header">
+        </div>
+
+        <div class="side-content">
+            <div class="profile">
+                <a class="navbar-brand" href="/"> <div class="profile-img bg-img" style="background-image: url(/static/images/logo.png)"></div></a>
+                <h4></h4>
+                <small></small>
+            </div>
+
+            <div class="side-menu">
+                <ul>
+                    <li>
+                        <span class="las la-user-alt"></span>
+                        <a href="{% url 'user_pars' %}"><small>Dashboard</small></a>
+                    </li>
+                    <li>
+                        <span class="las la-user-alt"></span>
+                        <a href="{% url 'create_par' %}"><small>Create PAR</small></a>
+                    </li>
+                    <li>
+                        <span class="las la-user-alt"></span>
+                        <a href="{% url 'par_list' %}"> <small> PAR list</small></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <div class="header-content">
+                <label for="menu-toggle">
+                    <span class="las la-bars"></span>
+                </label>
+
+                <div class="header-menu">
+                    <label for="">
+                        <span class="las la-search"></span>
+                    </label>
+
+                    <div class="user">
+                        <div class="bg-img" style="background-image: url(img/icon.jpeg)"></div>
+
+                        <span class="las la-power-off"></span>
+                        <span>
+                            <ul class="navbar-nav ml-auto">
+                                {% if user.is_authenticated %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                                    </li>
+                                {% else %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="page-header">
+                <h1>Dashboard</h1>
+                <small>Home / Dashboard</small>
+            </div>
+
+            <div class="page-content">
+                <div class="analytics">
+                    <div class="card">
+                        <div class="card-head">
+                            <h2>Total of PARs created this year!</h2>
+                            <span class="las la-user-friends"></span>
+                        </div>
+                        <div class="card-progress">
+                            <small>{{ total_par_count }}</small>
+                            <div class="card-indicator">
+                                <div class="indicator one" style="width: 60%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-head">
+                            <h2>Items created this year!</h2>
+                            <span class="las la-eye"></span>
+                        </div>
+                        <div class="card-progress">
+                            <small> {{ total_item_count }}</small>
+                            <div class="card-indicator">
+                                <div class="indicator two" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-head">
+                            <h2>Total of users this year! </h2>
+                            <span class="las la-shopping-cart"></span>
+                        </div>
+                        <div class="card-progress">
+                            <small>{{ total_users_count }}</small>
+                            <div class="card-indicator">
+                                <div class="indicator three" style="width: 65%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-head">
+                            <h2>Total unite price this year! </h2>
+                            <span class="las la-envelope"></span>
+                        </div>
+                        <div class="card-progress">
+                            <small>{{ total_unite_price_count }}</small>
+                            <div class="card-indicator">
+                                <div class="indicator four" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="records table-responsive">
+                    <div class="record-header">
+                        <div class="add">
+                            <span>Entries</span>
+                            <select name="" id="">
+                                <option value="">ID</option>
+                            </select>
+                            <a href="{% url 'create_par' %}"> <button>Add record</button></a>
+                        </div>
+
+                        <div class="browse">
+                           <input type="search" placeholder="Search" class="record-search">
+                            <select name="" id="">
+                                <option value="">Status</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <table width="100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th><span class="las la-sort"></span> Created by </th>
+                                    <th><span class="las la-sort"></span> Department </th>
+                                    <th><span class="las la-sort"></span> Category </th>
+                                    <th><span class="las la-sort"></span> Item</th>
+                                    <th><span class="las la-sort"></span> Unite Price</th>
+                                    <th><span class="las la-sort"></span> Issued at</th>
+                                    <th><span class="las la-sort"></span> Status </th>
+                                    <th><span class="las la-sort"></span> Attachment </th>
+                                    <th><span class="las la-sort"></span> Sign PDF </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for par in all_pars %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>
+                                        <div class="client">
+                                            <div class="client-info">
+                                                <h4>{{ par.user }}</h4>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="client">
+                                            <div class="client-info">
+                                                <h4>{{ par.department }}</h4>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="client">
+                                            <div class="client-info">
+                                                <h4>{{ par.category }}</h4>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                         <div class="client">
+                                            <div class="client-info">
+                                                <h4>{{ par.item }}</h4>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                         <div class="client">
+                                            <div class="client-info">
+                                                <h4>{{ par.unite_price }}</h4>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                         <div class="client">
+                                            <div class="client-info">
+                                                <h4>{{ par.created_at }}</h4>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                         <div class="client">
+                                            <div class="client-info">
+                                                <h4>{{ par.status }}</h4>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="client">
+                                           <div class="client-info">
+                                           {% if par.attachment %}
+                                           <h4><a href="{{ par.attachment.url }}" download>{{ par.attachment.name|cut:"par_requests/" }}</a></h4>
+                                            {% else %}
+                                           <h4>No attachment</h4>
+                                            {% endif %}
+                                           </div>
+                                       </div>
+                                   </td>
+                                   <td>
+                                        <div class="client">
+                                            <div class="client-info">
+                                                {% if par.attachment %}
+                                                    {% if not par.signed_attachment %}
+                                                        <a href="{% url 'sign_pdf' par.id %}" class="btn btn-sm btn-primary">Sign PDF</a>
+                                                    {% else %}
+                                                        <a href="{{ par.signed_attachment.url }}" download class="btn btn-sm btn-success">Download Signed PDF</a>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <span>No PDF to sign</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+{% endblock %}

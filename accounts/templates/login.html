@@ -1,0 +1,34 @@
+{% extends "par_list_2.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm p-4">
+                <h2 class="text-center text-primary mb-5">Login</h2>
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label">Email</label>
+                        <input type="email" id="{{ form.username.id_for_label }}" name="{{ form.username.name }}" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+                        <input type="password" id="{{ form.password.id_for_label }}" name="{{ form.password.name }}" class="form-control" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-muted">Need an account?</span>
+                        <a href="{% url 'register' %}" class="text-primary text-decoration-none ms-2">Register</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

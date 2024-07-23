@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Print PAR Requests</h1>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Request ID</th>
+                <th>Department</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Category</th>
+                <th>Unit Price</th>
+                <th>Creation Date</th>
+                <th>Chosen Date</th>
+                <th>Update Status</th> <!-- Moved to the end -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for par in pars %}
+            <tr>
+                <td>{{ par.id }}</td>
+                <td>{{ par.department }}</td>
+                <td>{{ par.item }}</td>
+                <td>{{ par.quantity }}</td>
+                <td>{{ par.category }}</td>
+                <td>{{ par.unite_price }}</td>
+                <td>{{ par.created_at }}</td>
+                <td>{{ par.chosen_date }}</td>
+                <td>
+                    {% if request.user.is_admin %} <!-- Only show for admin users -->
+                        <form method="post" action="{% url 'change_par_status' par.id %}">
+                            {% csrf_token %}
+                            <select name="status" class="custom-select custom-select-sm">
+                                {% for status, display_name in par_status_choices %}
+                                    <option value="{{ status }}" {% if par.status == status %}selected{% endif %}>{{ display_name }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-primary mt-2">Update</button>
+                        </form>
+                    {% else %}
+                        {{ par.get_status_display }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

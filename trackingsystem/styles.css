@@ -1,0 +1,43 @@
+.par-container {
+
+            display: inline; /* Display the text inline */
+            margin-left: 0px;
+            margin-right: 0px; /* Add some margin to separate the text */
+
+}
+
+ .centered-div {
+            width: 200px; /* Set a fixed width for the centered div */
+            height: 200px; /* Set a fixed height for the centered div */
+            background-color: lightgray; /* Add a background color for visibility */
+            margin: 0 auto; /* Center horizontally using margin */
+            display: flex; /* Center vertically using flexbox */
+            justify-content: center; /* Center horizontally within the div */
+            align-items: center; /* Center vertically within the div */
+        }
+
+
+span {text-align: center;}
+
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    width: 10px;
+    height: 10px;
+}
+
+.circle {
+    width: 100px;
+    height: 100px;
+    background-color: #3498db; /* Blue color */
+    border-radius: 50%; /* Creates a circle */
+    margin-right: 10px;
+}
+
+
+
+
+
+
